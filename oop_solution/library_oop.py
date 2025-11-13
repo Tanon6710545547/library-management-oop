@@ -17,3 +17,24 @@ class Book:
             self.available_copies += 1
             return True
         return False
+
+
+class Member:
+    def __init__(self, id, name, email):
+        self.id = id
+        self.name = name
+        self.email = email
+        self.borrowed_books = []  
+
+    def borrow_book(self, book):
+        if book.borrow_copy():
+            self.borrowed_books.append(book.id)
+            return True
+        return False
+
+    def return_book(self, book):
+        if book.id in self.borrowed_books:
+            book.return_copy()
+            self.borrowed_books.remove(book.id)
+            return True
+        return False

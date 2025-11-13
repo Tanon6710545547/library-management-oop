@@ -1,27 +1,36 @@
-from library_oop import Book
+from library_oop import Book, Member
 
-def test_create_book():
-    b = Book(1, "A", "B", 3)
-    assert b.available_copies == 3
+def test_member_borrow_success():
+    book = Book(1, "A", "B", 2)
+    m = Member(1, "Alice", "a@mail.com")
 
-def test_borrow_success():
-    b = Book(1, "A", "B", 3)
-    assert b.borrow_copy() is True
-    assert b.available_copies == 2
+    assert m.borrow_book(book) is True
+    assert 1 in m.borrowed_books
+    assert book.available_copies == 1
 
-def test_borrow_fail_no_copies():
-    b = Book(1, "A", "B", 1)
-    b.borrow_copy()  
-    assert b.borrow_copy() is False
-    assert b.available_copies == 0
 
-def test_return_success():
-    b = Book(1, "A", "B", 3)
-    b.borrow_copy() 
-    assert b.return_copy() is True
-    assert b.available_copies == 3
+def test_member_borrow_fail_no_copies():
+    book = Book(1, "A", "B", 0)
+    m = Member(1, "Alice", "a@mail.com")
 
-def test_return_fail_full():
-    b = Book(1, "A", "B", 3)
-    assert b.return_copy() is False
-    assert b.available_copies == 3
+    assert m.borrow_book(book) is False
+    assert len(m.borrowed_books) == 0
+
+
+def test_member_return_success():
+    book = Book(1, "A", "B", 1)
+    m = Member(1, "Alice", "a@mail.com")
+
+    m.borrow_book(book)
+    assert m.return_book(book) is True
+    assert 1 not in m.borrowed_books
+    assert book.available_copies == 1
+
+
+def test_member_return_fail_not_borrowed():
+    book = Book(1, "A", "B", 1)
+    m = Member(1, "Alice", "a@mail.com")
+
+    assert m.return_book(book) is False
+    assert book.available_copies == 1
+
